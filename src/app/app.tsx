@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import NxWelcome from './nx-welcome';
+import { BasicGrid } from './grid';
 
 const StyledApp = styled.div`
   // Your style here
@@ -9,7 +9,7 @@ const StyledApp = styled.div`
 export function App() {
   return (
     <StyledApp>
-      <NxWelcome title="happy-habit" />
+      <BasicGrid x={4} y={4} />
     </StyledApp>
   );
 }
