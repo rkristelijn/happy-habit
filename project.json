@@ -1,70 +1,88 @@
 {
   "name": "happy-habit",
   "$schema": "node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "./src",
   "projectType": "application",
+  "prefix": "happy-habit",
+  "sourceRoot": "./src",
+  "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/vite:build",
+      "executor": "@angular-devkit/build-angular:browser",
       "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/happy-habit"
+        "outputPath": "dist/happy-habit",
+        "index": "./src/index.html",
+        "main": "./src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "./tsconfig.app.json",
+        "assets": ["./src/favicon.ico", "./src/assets"],
+        "styles": ["./src/styles.scss"],
+        "scripts": []
       },
       "configurations": {
-        "development": {
-          "mode": "development"
-        },
         "production": {
-          "mode": "production"
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
         }
-      }
+      },
+      "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@nx/vite:dev-server",
-      "defaultConfiguration": "development",
-      "options": {
-        "buildTarget": "happy-habit:build"
-      },
+      "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
-        "development": {
-          "buildTarget": "happy-habit:build:development",
-          "hmr": true
-        },
         "production": {
-          "buildTarget": "happy-habit:build:production",
-          "hmr": false
+          "browserTarget": "happy-habit:build:production"
+        },
+        "development": {
+          "browserTarget": "happy-habit:build:development"
         }
-      }
-    },
-    "preview": {
-      "executor": "@nx/vite:preview-server",
-      "defaultConfiguration": "development",
-      "options": {
-        "buildTarget": "happy-habit:build"
       },
-      "configurations": {
-        "development": {
-          "buildTarget": "happy-habit:build:development"
-        },
-        "production": {
-          "buildTarget": "happy-habit:build:production"
-        }
-      }
+      "defaultConfiguration": "development"
     },
-    "test": {
-      "executor": "@nx/vite:test",
-      "outputs": ["coverage/happy-habit"],
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "passWithNoTests": true,
-        "reportsDirectory": "coverage/happy-habit"
+        "browserTarget": "happy-habit:build"
       }
     },
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["./src/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["./src/**/*.ts", "./src/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectName}"],
+      "options": {
+        "jestConfig": "jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     },
     "serve-static": {
@@ -73,6 +91,5 @@
         "buildTarget": "happy-habit:build"
       }
     }
-  },
-  "tags": []
+  }
 }
